@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Border UI Style</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #1a1a2e;
+    color: #e0e0f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+    color: #7dd3fc;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: #3a6080;
+    margin-bottom: 28px;
+    letter-spacing: 0.05em;
+  }
+
+  .main {
+    display: flex;
+    gap: 32px;
+    width: 100%;
+    max-width: 860px;
+    align-items: flex-start;
+  }
+
+  /* LEFT */
+  .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex: 0 0 auto;
+  }
+
+  .preview-wrap {
+    width: 240px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #16213e;
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  #preview-box {
+    width: 160px;
+    height: 200px;
+    background: rgba(255,255,255,0.04);
+    border: 8px solid #3b82f6;
+    border-style: solid;
+    border-radius: 0px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .preview-inner {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(125,211,252,0.18);
+  }
+
+  .style-label {
+    font-size: 0.82rem;
+    color: #4a90b8;
+    text-align: center;
+    min-height: 1.4em;
+    letter-spacing: 0.01em;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    width: 240px;
+    background: #0d1117;
+    border: 1px solid #1e3a50;
+    border-radius: 10px;
+    padding: 14px 16px 14px 16px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.71rem;
+    line-height: 1.85;
+    color: #cdd9e5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    position: relative;
+  }
+
+  .code-block .kw   { color: #ff7b72; }
+  .code-block .fn   { color: #d2a8ff; }
+  .code-block .str  { color: #a5d6ff; }
+  .code-block .num  { color: #79c0ff; }
+  .code-block .cmt  { color: #484f58; font-style: italic; }
+  .code-block .var  { color: #ffa657; }
+  .code-block .punc { color: #8b949e; }
+  .code-block .attr { color: #7dd3fc; }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: #1e3a50;
+    border: none;
+    border-radius: 6px;
+    color: #4a90b8;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .copy-btn:hover { background: #3b82f6; color: #fff; }
+
+  /* RIGHT */
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #2a5a78;
+    margin-bottom: 10px;
+  }
+
+  /* LIBRARY TABS */
+  .lib-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .lib-btn {
+    background: #16213e;
+    border: 1px solid #1e3a50;
+    border-radius: 8px;
+    color: #4a90b8;
+    font-size: 0.78rem;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    transition: all 0.15s;
+  }
+  .lib-btn:hover {
+    border-color: #3b82f6;
+    color: #7dd3fc;
+    transform: translateY(-1px);
+  }
+  .lib-btn.active {
+    background: #1d4ed8;
+    border-color: #3b82f6;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* STYLE PILLS */
+  .style-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .style-btn {
+    background: #16213e;
+    border: 1px solid #1e3a50;
+    border-radius: 20px;
+    color: #4a90b8;
+    font-size: 0.8rem;
+    padding: 6px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .style-btn:hover {
+    border-color: #3b82f6;
+    color: #7dd3fc;
+    transform: translateY(-1px);
+  }
+  .style-btn.active {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* CONTROLS */
+  .controls { display: flex; flex-direction: column; gap: 16px; }
+
+  .control-row { display: flex; flex-direction: column; gap: 6px; }
+
+  .control-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: #4a90b8;
+  }
+  .control-label span.val { color: #7dd3fc; font-weight: 600; font-size: 0.8rem; }
+
+  input[type="range"] {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    background: #1e3a50;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 2px solid #1a1a2e;
+    transition: transform 0.1s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 2px solid #1a1a2e;
+    cursor: pointer;
+  }
+
+  .color-row { display: flex; align-items: center; gap: 10px; }
+
+  .color-swatch {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    border: 2px solid #1e3a50;
+    flex: 0 0 auto;
+  }
+
+  input[type="color"] {
+    width: 100%; height: 32px;
+    border: none;
+    background: #16213e;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 2px;
+  }
+  input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+
+  /* WIDGET TYPE */
+  .widget-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .widget-btn {
+    background: #16213e;
+    border: 1px solid #1e3a50;
+    border-radius: 6px;
+    color: #4a90b8;
+    font-size: 0.75rem;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+    transition: all 0.15s;
+  }
+  .widget-btn:hover { border-color: #3b82f6; color: #7dd3fc; }
+  .widget-btn.active {
+    background: #0f2a40;
+    border-color: #3b82f6;
+    color: #7dd3fc;
+    font-weight: 700;
+  }
+
+  @media (max-width: 600px) {
+    .main { flex-direction: column; align-items: center; }
+    .left, .code-block, .preview-wrap { width: 100%; max-width: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Python Border UI Style</h1>
+<div class="subtitle">Python border code generator</div>
+
+<div class="main">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="preview-wrap">
+      <div id="preview-box"><div class="preview-inner"></div></div>
+    </div>
+    <div class="style-label" id="style-label">solid &mdash; Standard solid line</div>
+    <div class="code-block" id="code-block">
+<button class="copy-btn" id="copy-btn">copy</button><span id="code-output"></span></div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <div>
+      <div class="section-title">Library</div>
+      <div class="lib-tabs" id="lib-tabs"></div>
+    </div>
+
+    <div id="widget-section">
+      <div class="section-title">Widget / Element</div>
+      <div class="widget-list" id="widget-list"></div>
+    </div>
+
+    <div>
+      <div class="section-title">Border Style</div>
+      <div class="style-list" id="style-list"></div>
+    </div>
+
+    <div class="controls">
+      <div class="section-title">Controls</div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Width</span>
+          <span class="val" id="width-val">8</span>
+        </div>
+        <input type="range" id="width-slider" min="1" max="20" value="8">
+      </div>
+
+      <div class="control-row" id="radius-row">
+        <div class="control-label">
+          <span>Radius <span style="font-size:0.68rem;color:#2a5a78">(Pillow / turtle)</span></span>
+          <span class="val" id="radius-val">0</span>
+        </div>
+        <input type="range" id="radius-slider" min="0" max="60" value="0">
+      </div>
+
+      <div class="control-row">
+        <div class="control-label"><span>Color</span></div>
+        <div class="color-row">
+          <div class="color-swatch" id="color-swatch" style="background:#3b82f6"></div>
+          <input type="color" id="color-picker" value="#3b82f6">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+
+const libraries = {
+  tkinter: {
+    label: 'tkinter',
+    styles: [
+      { name: 'flat',   desc: 'No 3D effect',       css: 'solid',  cssExtra: '' },
+      { name: 'solid',  desc: 'Solid line border',   css: 'solid',  cssExtra: '' },
+      { name: 'raised', desc: 'Button-raised look',  css: 'outset', cssExtra: '' },
+      { name: 'sunken', desc: 'Pressed/sunken look', css: 'inset',  cssExtra: '' },
+      { name: 'groove', desc: '3D carved groove',    css: 'groove', cssExtra: '' },
+      { name: 'ridge',  desc: '3D raised ridge',     css: 'ridge',  cssExtra: '' },
+    ],
+    widgets: ['Frame', 'Label', 'Button', 'Entry', 'Canvas', 'LabelFrame'],
+    defaultWidget: 'Frame',
+  },
+  pillow: {
+    label: 'Pillow (PIL)',
+    styles: [
+      { name: 'solid',  desc: 'Filled rectangle border', css: 'solid',  cssExtra: '' },
+      { name: 'dashed', desc: 'Dashed line border',      css: 'dashed', cssExtra: '' },
+      { name: 'dotted', desc: 'Dotted line border',      css: 'dotted', cssExtra: '' },
+      { name: 'double', desc: 'Two-line border',         css: 'double', cssExtra: '' },
+      { name: 'none',   desc: 'No border',               css: 'none',   cssExtra: '' },
+    ],
+    widgets: ['Image', 'Rectangle', 'Ellipse', 'RoundedRect'],
+    defaultWidget: 'Rectangle',
+  },
+  turtle: {
+    label: 'turtle',
+    styles: [
+      { name: 'solid',  desc: 'Filled stroke',      css: 'solid',  cssExtra: '' },
+      { name: 'dashed', desc: 'Dashed stroke',       css: 'dashed', cssExtra: '' },
+      { name: 'dotted', desc: 'Dotted stroke',       css: 'dotted', cssExtra: '' },
+      { name: 'none',   desc: 'No border drawn',     css: 'none',   cssExtra: '' },
+    ],
+    widgets: ['rectangle', 'square', 'circle', 'polygon'],
+    defaultWidget: 'rectangle',
+  },
+  pygame: {
+    label: 'pygame',
+    styles: [
+      { name: 'solid',  desc: 'Filled rect border',  css: 'solid',  cssExtra: '' },
+      { name: 'dashed', desc: 'Dashed rect border',  css: 'dashed', cssExtra: '' },
+      { name: 'rounded',desc: 'Border with radius',  css: 'solid',  cssExtra: 'border-radius:20px' },
+      { name: 'none',   desc: 'No border',           css: 'none',   cssExtra: '' },
+    ],
+    widgets: ['Surface', 'Rect', 'Circle', 'Polygon'],
+    defaultWidget: 'Rect',
+  },
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+
+let state = {
+  lib: 'tkinter',
+  style: 'solid',
+  width: 8,
+  radius: 0,
+  color: '#3b82f6',
+  widget: 'Frame',
+};
+
+// ── ELEMENTS ──────────────────────────────────────────────────────────────────
+
+const box          = document.getElementById('preview-box');
+const styleLabel   = document.getElementById('style-label');
+const codeOut      = document.getElementById('code-output');
+const libTabs      = document.getElementById('lib-tabs');
+const widgetList   = document.getElementById('widget-list');
+const styleList    = document.getElementById('style-list');
+const widthSlider  = document.getElementById('width-slider');
+const radiusSlider = document.getElementById('radius-slider');
+const colorPicker  = document.getElementById('color-picker');
+const widthVal     = document.getElementById('width-val');
+const radiusVal    = document.getElementById('radius-val');
+const swatch       = document.getElementById('color-swatch');
+const copyBtn      = document.getElementById('copy-btn');
+
+// ── CODE GENERATORS ───────────────────────────────────────────────────────────
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `(${r}, ${g}, ${b})`;
+}
+
+function hl(cls, text) { return `<span class="${cls}">${text}</span>`; }
+const kw = t => hl('kw', t);
+const fn = t => hl('fn', t);
+const str = t => hl('str', `"${t}"`);
+const num = t => hl('num', t);
+const va = t => hl('var', t);
+const at = t => hl('attr', t);
+const cm = t => hl('cmt', `# ${t}`);
+const pu = t => hl('punc', t);
+
+function genTkinter() {
+  const { style, width, color, widget } = state;
+  const isFlat = style === 'flat' || style === 'none';
+  const relief = style === 'none' ? 'flat' : style;
+  const bd = isFlat ? 0 : width;
+
+  const lines = [
+    `${cm('pip install tk  (usually included with Python)')}`,
+    `${kw('import')} tkinter ${kw('as')} tk`,
+    ``,
+    `${va('root')} ${pu('=')} tk${pu('.')}${fn('Tk')}${pu('()')}`,
+    `${va('root')}${pu('.')}${fn('title')}${pu('(')}${str('My Window')}${pu(')')}`,
+    ``,
+    `${va('widget')} ${pu('=')} tk${pu('.')}${fn(widget)}${pu('(')}`,
+    `    ${va('root')}${pu(',')}\n    ${at('relief')}${pu('=')}tk${pu('.')}${fn(relief.toUpperCase())}${pu(',')}`,
+    `    ${at('bd')}${pu('=')}${num(bd)}${pu(',')}`,
+    `    ${at('highlightbackground')}${pu('=')}${str(color)}${pu(',')}`,
+    `    ${at('highlightthickness')}${pu('=')}${num(bd)}`,
+    `${pu(')')}`,
+    `${va('widget')}${pu('.')}${fn('pack')}${pu('(')}${at('padx')}${pu('=')}${num(20)}${pu(',')} ${at('pady')}${pu('=')}${num(20)}${pu(')')}`,
+    ``,
+    `${va('root')}${pu('.')}${fn('mainloop')}${pu('()')}`,
+  ];
+  return lines.join('\n');
+}
+
+function genPillow() {
+  const { style, width, radius, color, widget } = state;
+  const rgb = hexToRgb(color);
+  const isRounded = widget === 'RoundedRect';
+  const isEllipse = widget === 'Ellipse';
+
+  const lines = [
+    `${cm('pip install Pillow')}`,
+    `${kw('from')} PIL ${kw('import')} Image${pu(',')} ImageDraw`,
+    ``,
+    `${va('img')} ${pu('=')} Image${pu('.')}${fn('new')}${pu('(')}${str('RGBA')}${pu(',')} ${pu('(')}${num(300)}${pu(',')} ${num(300)}${pu(')')}${pu(')')}`,
+    `${va('draw')} ${pu('=')} ImageDraw${pu('.')}${fn('Draw')}${pu('(')}${va('img')}${pu(')')}`,
+    ``,
+    `${va('color')} ${pu('=')} ${pu('(')}${num(rgb.slice(1,-1))}${pu(')')}`,
+    `${va('box')} ${pu('=')} ${pu('[')}${num(20)}${pu(',')} ${num(20)}${pu(',')} ${num(280)}${pu(',')} ${num(280)}${pu(']')}`,
+    style === 'none'
+      ? `${cm("no border — skip draw call")}`
+      : isRounded
+        ? `${va('draw')}${pu('.')}${fn('rounded_rectangle')}${pu('(')}${va('box')}${pu(',')} ${at('radius')}${pu('=')}${num(radius)}${pu(',')} ${at('outline')}${pu('=')}${va('color')}${pu(',')} ${at('width')}${pu('=')}${num(width)}${pu(')')}`
+        : isEllipse
+          ? `${va('draw')}${pu('.')}${fn('ellipse')}${pu('(')}${va('box')}${pu(',')} ${at('outline')}${pu('=')}${va('color')}${pu(',')} ${at('width')}${pu('=')}${num(width)}${pu(')')}`
+          : `${va('draw')}${pu('.')}${fn('rectangle')}${pu('(')}${va('box')}${pu(',')} ${at('outline')}${pu('=')}${va('color')}${pu(',')} ${at('width')}${pu('=')}${num(width)}${pu(')')}`,
+    ``,
+    `${va('img')}${pu('.')}${fn('show')}${pu('()')}`,
+    `${cm('img.save("output.png")')}`,
+  ];
+  return lines.join('\n');
+}
+
+function genTurtle() {
+  const { style, width, color, widget, radius } = state;
+  const rgb = hexToRgb(color);
+  const drawFn = widget === 'circle' ? 'circle' : widget === 'polygon' ? 'polygon' : 'rect';
+
+  const lines = [
+    `${cm('turtle is in Python standard library')}`,
+    `${kw('import')} turtle`,
+    ``,
+    `${va('t')} ${pu('=')} turtle${pu('.')}${fn('Turtle')}${pu('()')}`,
+    `${va('t')}${pu('.')}${fn('speed')}${pu('(')}${num(0)}${pu(')')}`,
+    style === 'none'
+      ? `${va('t')}${pu('.')}${fn('penup')}${pu('()')}`
+      : [
+          `${va('t')}${pu('.')}${fn('pensize')}${pu('(')}${num(width)}${pu(')')}`,
+          `${va('t')}${pu('.')}${fn('pencolor')}${pu('(')}${num(rgb)}${pu(')')}`,
+        ].join('\n'),
+    ``,
+    widget === 'circle'
+      ? `${va('t')}${pu('.')}${fn('circle')}${pu('(')}${num(100)}${pu(')')}`
+      : widget === 'square'
+        ? [
+            `${kw('for')} ${va('_')} ${kw('in')} ${fn('range')}${pu('(')}${num(4)}${pu(')')}${pu(':')}`,
+            `    ${va('t')}${pu('.')}${fn('forward')}${pu('(')}${num(150)}${pu(')')}`,
+            `    ${va('t')}${pu('.')}${fn('right')}${pu('(')}${num(90)}${pu(')')}`,
+          ].join('\n')
+        : widget === 'polygon'
+          ? [
+              `${kw('for')} ${va('_')} ${kw('in')} ${fn('range')}${pu('(')}${num(6)}${pu(')')}${pu(':')}`,
+              `    ${va('t')}${pu('.')}${fn('forward')}${pu('(')}${num(100)}${pu(')')}`,
+              `    ${va('t')}${pu('.')}${fn('right')}${pu('(')}${num(60)}${pu(')')}`,
+            ].join('\n')
+          : [
+              `${kw('for')} ${va('side')} ${kw('in')} ${pu('[')}${num(200)}${pu(',')} ${num(150)}${pu(',')} ${num(200)}${pu(',')} ${num(150)}${pu(']')}${pu(':')}`,
+              `    ${va('t')}${pu('.')}${fn('forward')}${pu('(')}${va('side')}${pu(')')}`,
+              `    ${va('t')}${pu('.')}${fn('right')}${pu('(')}${num(90)}${pu(')')}`,
+            ].join('\n'),
+    ``,
+    `turtle${pu('.')}${fn('done')}${pu('()')}`,
+  ];
+  return lines.join('\n');
+}
+
+function genPygame() {
+  const { style, width, color, widget, radius } = state;
+  const rgb = hexToRgb(color);
+
+  const drawCall = style === 'none'
+    ? `${cm('no border drawn')}`
+    : widget === 'Circle'
+      ? `pygame${pu('.')}draw${pu('.')}${fn('circle')}${pu('(')}${va('screen')}${pu(',')} ${va('COLOR')}${pu(',')} ${pu('(')}${num(150)}${pu(',')} ${num(150)}${pu(')')}${pu(',')} ${num(100)}${pu(',')} ${num(width)}${pu(')')}`
+      : (style === 'rounded' || radius > 0)
+        ? `pygame${pu('.')}draw${pu('.')}${fn('rect')}${pu('(')}${va('screen')}${pu(',')} ${va('COLOR')}${pu(',')} ${va('rect')}${pu(',')} ${num(width)}${pu(',')} ${at('border_radius')}${pu('=')}${num(radius)}${pu(')')}`
+        : `pygame${pu('.')}draw${pu('.')}${fn('rect')}${pu('(')}${va('screen')}${pu(',')} ${va('COLOR')}${pu(',')} ${va('rect')}${pu(',')} ${num(width)}${pu(')')}`;
+
+  const lines = [
+    `${cm('pip install pygame')}`,
+    `${kw('import')} pygame`,
+    `pygame${pu('.')}${fn('init')}${pu('()')}`,
+    ``,
+    `${va('screen')} ${pu('=')} pygame${pu('.')}display${pu('.')}${fn('set_mode')}${pu('(')}${pu('(')}${num(300)}${pu(',')} ${num(300)}${pu(')')}${pu(')')}`,
+    `${va('COLOR')}  ${pu('=')} ${num(rgb)}`,
+    `${va('BG')}     ${pu('=')} ${pu('(')}${num(26)}${pu(',')} ${num(26)}${pu(',')} ${num(46)}${pu(')')}`,
+    `${va('rect')}   ${pu('=')} pygame${pu('.')}${fn('Rect')}${pu('(')}${num(20)}${pu(',')} ${num(20)}${pu(',')} ${num(260)}${pu(',')} ${num(260)}${pu(')')}`,
+    ``,
+    `${kw('while')} ${fn('True')}${pu(':')}`,
+    `    ${kw('for')} ${va('e')} ${kw('in')} pygame${pu('.')}event${pu('.')}${fn('get')}${pu('()')}${pu(':')}`,
+    `        ${kw('if')} ${va('e')}${pu('.')}type ${pu('==')} pygame${pu('.')}QUIT${pu(':')}`,
+    `            pygame${pu('.')}${fn('quit')}${pu('()')}`,
+    `    ${va('screen')}${pu('.')}${fn('fill')}${pu('(')}${va('BG')}${pu(')')}`,
+    `    ${drawCall}`,
+    `    pygame${pu('.')}display${pu('.')}${fn('flip')}${pu('()')}`,
+  ];
+  return lines.join('\n');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+
+function getLibData() { return libraries[state.lib]; }
+
+function getStyleEntry() {
+  return getLibData().styles.find(s => s.name === state.style) || getLibData().styles[0];
+}
+
+function applyPreview() {
+  const entry = getStyleEntry();
+  let cssStyle = entry.css;
+  box.style.borderStyle  = cssStyle === 'none' ? 'none' : cssStyle;
+  box.style.borderWidth  = cssStyle === 'none' ? '0' : state.width + 'px';
+  box.style.borderRadius = state.radius + 'px';
+  box.style.borderColor  = state.color;
+
+  // special override for rounded pygame
+  if (entry.cssExtra) {
+    const m = entry.cssExtra.match(/border-radius:(\d+)px/);
+    if (m) box.style.borderRadius = m[1] + 'px';
+  }
+}
+
+function applyCode() {
+  let code = '';
+  if (state.lib === 'tkinter') code = genTkinter();
+  else if (state.lib === 'pillow') code = genPillow();
+  else if (state.lib === 'turtle') code = genTurtle();
+  else if (state.lib === 'pygame') code = genPygame();
+  codeOut.innerHTML = code;
+}
+
+function applyLabel() {
+  const entry = getStyleEntry();
+  styleLabel.innerHTML = `<strong style="color:#7dd3fc">${entry.name}</strong> &mdash; ${entry.desc}`;
+}
+
+function render() {
+  applyPreview();
+  applyCode();
+  applyLabel();
+}
+
+// ── BUILD UI ──────────────────────────────────────────────────────────────────
+
+function buildLibTabs() {
+  libTabs.innerHTML = '';
+  Object.keys(libraries).forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'lib-btn' + (key === state.lib ? ' active' : '');
+    btn.textContent = libraries[key].label;
+    btn.addEventListener('click', () => {
+      state.lib = key;
+      const libData = libraries[key];
+      // reset style and widget to lib defaults
+      state.style  = libData.styles[0].name;
+      state.widget = libData.defaultWidget;
+      document.querySelectorAll('.lib-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      buildStyleBtns();
+      buildWidgetBtns();
+      render();
+    });
+    libTabs.appendChild(btn);
+  });
+}
+
+function buildStyleBtns() {
+  styleList.innerHTML = '';
+  getLibData().styles.forEach(({ name }) => {
+    const btn = document.createElement('button');
+    btn.className = 'style-btn' + (name === state.style ? ' active' : '');
+    btn.textContent = name;
+    btn.addEventListener('click', () => {
+      state.style = name;
+      document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    });
+    styleList.appendChild(btn);
+  });
+}
+
+function buildWidgetBtns() {
+  widgetList.innerHTML = '';
+  getLibData().widgets.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'widget-btn' + (name === state.widget ? ' active' : '');
+    btn.textContent = name;
+    btn.addEventListener('click', () => {
+      state.widget = name;
+      document.querySelectorAll('.widget-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    });
+    widgetList.appendChild(btn);
+  });
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────────────
+
+widthSlider.addEventListener('input', () => {
+  state.width = +widthSlider.value;
+  widthVal.textContent = state.width;
+  render();
+});
+
+radiusSlider.addEventListener('input', () => {
+  state.radius = +radiusSlider.value;
+  radiusVal.textContent = state.radius;
+  render();
+});
+
+colorPicker.addEventListener('input', () => {
+  state.color = colorPicker.value;
+  swatch.style.background = state.color;
+  render();
+});
+
+// ── COPY ──────────────────────────────────────────────────────────────────────
+
+function stripTags(html) {
+  const d = document.createElement('div');
+  d.innerHTML = html;
+  return d.textContent;
+}
+
+copyBtn.addEventListener('click', () => {
+  const plain = stripTags(codeOut.innerHTML);
+  navigator.clipboard.writeText(plain).then(() => {
+    copyBtn.textContent = 'copied!';
+    setTimeout(() => copyBtn.textContent = 'copy', 1500);
+  });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+buildLibTabs();
+buildStyleBtns();
+buildWidgetBtns();
+render();
+</script>
+</body>
+</html>

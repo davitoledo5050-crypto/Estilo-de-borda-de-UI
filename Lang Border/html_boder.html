@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Border UI Style</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #1a1a2e;
+    color: #e0e0f0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+    color: #b8ffc4;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: #5a7a60;
+    margin-bottom: 28px;
+    letter-spacing: 0.05em;
+  }
+
+  .main {
+    display: flex;
+    gap: 32px;
+    width: 100%;
+    max-width: 820px;
+    align-items: flex-start;
+  }
+
+  /* LEFT COLUMN */
+  .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex: 0 0 auto;
+  }
+
+  .preview-wrap {
+    width: 240px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #16213e;
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  #preview-box {
+    width: 160px;
+    height: 200px;
+    background: rgba(255,255,255,0.04);
+    border: 8px solid #2ecc71;
+    border-style: solid;
+    border-radius: 28px;
+    transition: border-color 0.15s, border-width 0.15s, border-radius 0.15s, border-style 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .preview-inner {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(160,255,174,0.18);
+  }
+
+  .style-label {
+    font-size: 0.82rem;
+    color: #7ab88a;
+    text-align: center;
+    min-height: 1.4em;
+    letter-spacing: 0.01em;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    width: 240px;
+    background: #0f0f1e;
+    border: 1px solid #1e3a2a;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.72rem;
+    line-height: 1.8;
+    color: #a0e8b0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    position: relative;
+  }
+
+  .code-block .tag   { color: #7ec8e3; }
+  .code-block .attr  { color: #b8ffc4; }
+  .code-block .prop  { color: #7dd87d; }
+  .code-block .val   { color: #e0a870; }
+  .code-block .punc  { color: #556655; }
+  .code-block .str   { color: #f0c070; }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: #1e3a2a;
+    border: none;
+    border-radius: 6px;
+    color: #7ab88a;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .copy-btn:hover { background: #2ecc71; color: #0f1e14; }
+
+  /* RIGHT COLUMN */
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #3a6a4a;
+    margin-bottom: 10px;
+  }
+
+  /* ELEMENT SELECTOR */
+  .element-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .el-btn {
+    background: #16213e;
+    border: 1px solid #1e3a2a;
+    border-radius: 20px;
+    color: #7ab88a;
+    font-size: 0.78rem;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+    font-family: 'Cascadia Code', 'Consolas', monospace;
+  }
+  .el-btn:hover {
+    background: #1e3a2a;
+    border-color: #2ecc71;
+    color: #b8ffc4;
+    transform: translateY(-1px);
+  }
+  .el-btn.active {
+    background: #2ecc71;
+    border-color: #2ecc71;
+    color: #0f1e14;
+    font-weight: 700;
+  }
+
+  /* STYLE PILLS */
+  .style-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .style-btn {
+    background: #16213e;
+    border: 1px solid #1e3a2a;
+    border-radius: 20px;
+    color: #7ab88a;
+    font-size: 0.8rem;
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+    font-family: inherit;
+  }
+  .style-btn:hover {
+    background: #1e3a2a;
+    border-color: #2ecc71;
+    color: #b8ffc4;
+    transform: translateY(-1px);
+  }
+  .style-btn.active {
+    background: #2ecc71;
+    border-color: #2ecc71;
+    color: #0f1e14;
+    font-weight: 700;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .control-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .control-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: #7ab88a;
+  }
+
+  .control-label span.val {
+    color: #b8ffc4;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    background: #1e3a2a;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #2ecc71;
+    border: 2px solid #1a1a2e;
+    transition: transform 0.1s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #2ecc71;
+    border: 2px solid #1a1a2e;
+    cursor: pointer;
+  }
+
+  .color-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid #1e3a2a;
+    flex: 0 0 auto;
+    transition: background 0.1s;
+  }
+
+  input[type="color"] {
+    width: 100%;
+    height: 32px;
+    border: none;
+    background: #16213e;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 2px;
+  }
+  input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+
+  @media (max-width: 580px) {
+    .main { flex-direction: column; align-items: center; }
+    .left, .code-block, .preview-wrap { width: 100%; max-width: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>HTML Border UI Style</h1>
+<div class="subtitle">inline style attribute generator</div>
+
+<div class="main">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="preview-wrap">
+      <div id="preview-box"><div class="preview-inner"></div></div>
+    </div>
+    <div class="style-label" id="style-label">solid &mdash; Standard solid line</div>
+    <div class="code-block" id="code-block">
+<button class="copy-btn" id="copy-btn">copy</button><span id="code-output"></span></div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <div>
+      <div class="section-title">HTML Element</div>
+      <div class="element-list" id="element-list"></div>
+    </div>
+
+    <div>
+      <div class="section-title">Border Style</div>
+      <div class="style-list" id="style-list"></div>
+    </div>
+
+    <div class="controls">
+      <div class="section-title">Controls</div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Width</span>
+          <span class="val" id="width-val">8px</span>
+        </div>
+        <input type="range" id="width-slider" min="1" max="20" value="8">
+      </div>
+
+      <div class="control-row">
+        <div class="control-label">
+          <span>Radius</span>
+          <span class="val" id="radius-val">28px</span>
+        </div>
+        <input type="range" id="radius-slider" min="0" max="60" value="28">
+      </div>
+
+      <div class="control-row">
+        <div class="control-label"><span>Color</span></div>
+        <div class="color-row">
+          <div class="color-swatch" id="color-swatch" style="background:#2ecc71"></div>
+          <input type="color" id="color-picker" value="#2ecc71">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const borderStyles = [
+    { name: 'solid',  desc: 'Standard solid line' },
+    { name: 'dashed', desc: 'Evenly spaced dashes' },
+    { name: 'dotted', desc: 'Round dots' },
+    { name: 'double', desc: 'Two parallel lines' },
+    { name: 'groove', desc: '3D carved look' },
+    { name: 'ridge',  desc: '3D raised look' },
+    { name: 'inset',  desc: 'Sunken 3D effect' },
+    { name: 'outset', desc: 'Raised 3D effect' },
+    { name: 'none',   desc: 'No border rendered' },
+    { name: 'hidden', desc: 'Border hidden (space kept)' },
+  ];
+
+  const elements = ['div', 'p', 'span', 'button', 'input', 'img', 'table', 'section'];
+
+  let state = { style: 'solid', width: 8, radius: 28, color: '#2ecc71', element: 'div' };
+
+  const box          = document.getElementById('preview-box');
+  const label        = document.getElementById('style-label');
+  const codeOut      = document.getElementById('code-output');
+  const styleList    = document.getElementById('style-list');
+  const elementList  = document.getElementById('element-list');
+  const widthSlider  = document.getElementById('width-slider');
+  const radiusSlider = document.getElementById('radius-slider');
+  const colorPicker  = document.getElementById('color-picker');
+  const widthVal     = document.getElementById('width-val');
+  const radiusVal    = document.getElementById('radius-val');
+  const swatch       = document.getElementById('color-swatch');
+  const copyBtn      = document.getElementById('copy-btn');
+
+  // Self-closing elements (no children shown)
+  const selfClosing = new Set(['input', 'img']);
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function buildInlineStyle() {
+    const { style, width, radius, color } = state;
+    return `border: ${width}px ${style} ${color}; border-radius: ${radius}px;`;
+  }
+
+  function buildCodeHTML() {
+    const { element } = state;
+    const inlineStyle = buildInlineStyle();
+    const styleVal = escHtml(inlineStyle);
+
+    if (selfClosing.has(element)) {
+      return (
+        `<span class="punc">&lt;</span>` +
+        `<span class="tag">${element}</span> ` +
+        `<span class="attr">style</span>` +
+        `<span class="punc">="</span>` +
+        `<span class="str">${styleVal}</span>` +
+        `<span class="punc">"&gt;</span>`
+      );
+    }
+
+    // Multiline for block elements
+    const inner = element === 'table'
+      ? '\n  <span class="punc">&lt;</span><span class="tag">tr</span><span class="punc">&gt;&lt;</span><span class="tag">td</span><span class="punc">&gt;</span>content<span class="punc">&lt;/</span><span class="tag">td</span><span class="punc">&gt;&lt;/</span><span class="tag">tr</span><span class="punc">&gt;</span>\n'
+      : '\n  content\n';
+
+    return (
+      `<span class="punc">&lt;</span>` +
+      `<span class="tag">${element}</span> ` +
+      `<span class="attr">style</span>` +
+      `<span class="punc">="</span>` +
+      `<span class="str">${styleVal}</span>` +
+      `<span class="punc">"&gt;</span>` +
+      inner +
+      `<span class="punc">&lt;/</span><span class="tag">${element}</span><span class="punc">&gt;</span>`
+    );
+  }
+
+  function render() {
+    const { style, width, radius, color } = state;
+    box.style.borderStyle  = style;
+    box.style.borderWidth  = width + 'px';
+    box.style.borderRadius = radius + 'px';
+    box.style.borderColor  = color;
+
+    const desc = borderStyles.find(s => s.name === style)?.desc || '';
+    label.innerHTML = `<strong style="color:#b8ffc4">${style}</strong> &mdash; ${desc}`;
+
+    codeOut.innerHTML = buildCodeHTML();
+  }
+
+  // Build element buttons
+  elements.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'el-btn' + (name === state.element ? ' active' : '');
+    btn.textContent = `<${name}>`;
+    btn.addEventListener('click', () => {
+      state.element = name;
+      document.querySelectorAll('.el-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    });
+    elementList.appendChild(btn);
+  });
+
+  // Build style buttons
+  borderStyles.forEach(({ name }) => {
+    const btn = document.createElement('button');
+    btn.className = 'style-btn' + (name === state.style ? ' active' : '');
+    btn.textContent = name;
+    btn.addEventListener('click', () => {
+      state.style = name;
+      document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    });
+    styleList.appendChild(btn);
+  });
+
+  widthSlider.addEventListener('input', () => {
+    state.width = +widthSlider.value;
+    widthVal.textContent = state.width + 'px';
+    render();
+  });
+
+  radiusSlider.addEventListener('input', () => {
+    state.radius = +radiusSlider.value;
+    radiusVal.textContent = state.radius + 'px';
+    render();
+  });
+
+  colorPicker.addEventListener('input', () => {
+    state.color = colorPicker.value;
+    swatch.style.background = state.color;
+    render();
+  });
+
+  copyBtn.addEventListener('click', () => {
+    const { element } = state;
+    const inlineStyle = buildInlineStyle();
+    let text;
+    if (selfClosing.has(element)) {
+      text = `<${element} style="${inlineStyle}">`;
+    } else {
+      const inner = element === 'table' ? '\n  <tr><td>content</td></tr>\n' : '\n  content\n';
+      text = `<${element} style="${inlineStyle}">${inner}</${element}>`;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      copyBtn.textContent = 'copied!';
+      setTimeout(() => copyBtn.textContent = 'copy', 1500);
+    });
+  });
+
+  render();
+</script>
+</body>
+</html>
